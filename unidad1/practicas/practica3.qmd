@@ -1,0 +1,85 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{python}
+##introduccion al polimorfidmo 
+#simular un sistema de cobro con multiples
+#opcion de pago
+
+class pago_tarjeta: 
+    def procesar_pago(self, cantidad):
+        return f"procesando pago de ${cantidad} con tarjeta bamcaria "
+    
+class transferencia:
+    def procesar_pago(self, cantidad):
+        return f"procesando pago con transferencia por la cantidad de ${cantidad}"
+    
+class depositar:
+    def procesar_pago(self, cantidad):
+        return f"procesando pago con depodito en ventanilla por la cantidad de ${cantidad} "
+    
+class paypal:
+        def procesar_pago(self, cantidad):
+            return f"procesando pago de ${cantidad} por medio de paypal"
+        
+#instancia
+metodos_pago = [pago_tarjeta(), transferencia(), depositar(), paypal()]  
+
+#for m in metodos_pago:
+   # print(m.metodos_pago(500))
+
+
+    #actividad : procesar pago con diferentes cantidades en cada uno de las formas de pago ejemplo 100 con tarjeta,
+    #500 con transferencia, 2000 con paypal, 400 con deposito 
+
+pago1 = pago_tarjeta()
+pago2 = depositar()
+pago3 = transferencia()
+pago4 = paypal()
+
+print(pago1.procesar_pago(100))
+print(pago2.procesar_pago(400))  
+
+print(pago3.procesar_pago(500))
+print(pago4.procesar_pago(2000))
+
+##activadad que muestre notificacion, por mensaje que diga "se mandoo via correo electronico" "instragram " etc.
+# Clases de notificación
+class NotificacionCorreo:
+    def enviar(self, mensaje):
+        return f" Notificación enviada por correo electrónico: {mensaje}"
+
+class NotificacionInstagram:
+    def enviar(self, mensaje):
+        return f" Notificación publicada en Instagram: {mensaje}"
+
+class NotificacionSMS:
+    def enviar(self, mensaje):
+        return f" Notificación enviada por SMS: {mensaje}"
+
+class NotificacionWhatsApp:
+    def enviar(self, mensaje):
+        return f" Notificación enviada por WhatsApp: {mensaje}"
+
+# Lista de métodos de notificación
+notificaciones = [
+    NotificacionCorreo(),
+    NotificacionInstagram(),
+    NotificacionSMS(),
+    NotificacionWhatsApp()
+]
+
+# Mensajes personalizados
+mensajes = [
+    "Tu pago ha sido confirmado.",
+    "¡Gracias por tu compra!",
+    "Tu pedido está en camino.",
+    "Recibimos tu solicitud correctamente."
+]
+
+# Enviar cada notificación con su mensaje
+for metodo, mensaje in zip(notificaciones, mensajes):
+    print(metodo.enviar(mensaje))
+```
