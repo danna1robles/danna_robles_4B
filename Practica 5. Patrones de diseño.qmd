@@ -1,0 +1,99 @@
+---
+title: "Practica 5. Patrones de diseño"
+author: "robles danna michell"
+date: "29/09/2025"
+format: pdf
+---
+# Practica 5. Patrones de diseño
+# Singler
+
+r```{python}
+# Practica 5. Patrones de diseño
+# Singleton
+
+class Logger: 
+    # creamos un atributo de clase donde se aguardará la única instancia 
+    _instancia = None 
+
+    # __new__ es el método que controla la creación del objeto antes de init.
+    # Sirve para asegurarnos de que solo exista una única instancia de la clase Logger 
+    def __new__(cls, *args, **kwargs):
+        if cls._instancia is None: 
+            cls._instancia = super().__new__(cls)
+            # creamos atributo "archivo" que apunta a un archivo físico
+            # "a" significa append = todo lo que se escriba se agrega al final del archivo
+            cls._instancia.archivo = open("app.log", "a")
+        return cls._instancia  # devolvemos siempre la misma instancia
+
+    def log(self, mensaje):
+        self.archivo.write(mensaje + "\n")
+        self.archivo.flush()  # asegura que se guarde en el disco
+
+logger1 = Logger()  # primera y única instancia 
+logger2 = Logger()  # devuelve la misma instancia
+
+logger1.log("Inicio de sesión en la aplicación")
+logger2.log("El usuario se autenticó")
+
+# comprobar que son el mismo objeto en memoria
+print(logger1 is logger2)
+
+
+# Actividad de la práctica
+
+class Presidente:
+    _instancia = None  # 👈 faltaba declarar la variable de clase
+
+    def __new__(cls, nombre):
+        if cls._instancia is None:
+            cls._instancia = super().__new__(cls)
+            cls._instancia.nombre = nombre
+            cls._instancia.historial = []
+        return cls._instancia   # 👈 aquí estaba mal escrito (tenías __instancia)
+
+    def accion(self, accion):  # 👈 corregido el nombre del método (antes "aacion")
+        evento = f"{self.nombre} {accion}"
+        self.historial.append(evento)
+        print(evento)
+
+# Varios presidentes intentan tomar el poder 
+p1 = Presidente("AMLO")
+p2 = Presidente("Peña Nieto")
+p3 = Presidente("Fox")
+
+# Todos apuntan al mismo presidente 
+p1.accion("firmó decreto")
+p2.accion("visitó España")
+p3.accion("aprobó un presupuesto")
+
+print("\nHistorial del presidente")
+print(p1.historial)
+
+# Validación de Singleton
+print(p1 is p2 is p3)  # True o False
+
+```
+
+1. ¿Qué pasaría si eliminamos la verificación if cls._instancia is None en el método __new__?
+
+Si quitamos esa línea, cada vez que creemos un objeto se generaría uno nuevo y distinto, en vez de reutilizar siempre el mismo.
+Eso significa que ya no tendríamos un único presidente, sino varios diferentes (p1, p2, p3), rompiendo la idea principal del patrón Singleton, que es garantizar que solo exista una instancia en todo el programa.
+
+2. ¿Qué significa el True en p1 is p2 is p3 en el contexto del método Singleton?
+
+En Python, el operador is no compara valores, sino si dos variables apuntan al mismo lugar en memoria.
+Entonces, que salga True quiere decir que p1, p2 y p3 en realidad son el mismo objeto disfrazado con distintos nombres.
+Eso confirma que el Singleton está funcionando: aunque pareciera que tenemos tres presidentes, en verdad solo existe uno.
+
+3. ¿Es buena idea usar Singleton para todo lo que sea global?
+
+No, no es buena idea abusar de este patrón. El Singleton es muy útil cuando de verdad solo debe existir un único recurso en todo el sistema, por ejemplo:
+
+Un logger que guarda los eventos de la aplicación.
+La conexión principal a una base de datos.
+Un gestor de configuración que maneje parámetros globales.
+Pero no sería recomendable usarlo en casos donde cada objeto debe ser independiente y único, como:
+Modelar usuarios en una red social (cada usuario debe ser diferente).
+Modelar autos en un sistema de tránsito (cada coche tiene sus propios atributos).
+
+El Singleton es poderoso, pero si lo usamos para todo, el diseño se vuelve rígido y difícil de mantener.
